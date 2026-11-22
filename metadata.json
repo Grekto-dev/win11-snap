@@ -1,0 +1,14 @@
+{
+    "uuid": "win11-snap@pedro",
+    "name": "Win11 Snap",
+    "description": "Windows 11 Snap Layouts, Top Snap Bar, drag-to-snap quadrants, automatic Snap Assist, customizable Windows 11 shortcuts, and Win11 CSD window buttons.",
+    "url": "https://github.com/Grekto-dev/win11-snap",
+    "version": "1.0.0",
+    "cinnamon-version": [
+        "6.0",
+        "6.2",
+        "6.4",
+        "6.6"
+    ],
+    "author": "pedro"
+}

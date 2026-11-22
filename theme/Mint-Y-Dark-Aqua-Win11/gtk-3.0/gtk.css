@@ -1,0 +1,284 @@
+@import url("file:///usr/share/themes/Mint-Y-Dark-Aqua/gtk-3.0/gtk.css");
+
+/* ============================================================================
+ * Windows 11 Titlebar & Window Control Buttons (Zero-cost CSS + SVG)
+ * Fixed geometry at 96 DPI:
+ *   SSD (Muffin default-decoration): 46x32 px rectangular buttons
+ *   CSD (GTK3 headerbar): 46x46 px flush top-right buttons
+ * ============================================================================ */
+
+headerbar,
+.titlebar:not(headerbar) {
+  padding-right: 0;
+}
+
+headerbar:dir(rtl),
+.titlebar:not(headerbar):dir(rtl) {
+  padding-left: 0;
+  padding-right: 6px;
+}
+
+headerbar.default-decoration,
+.default-decoration.titlebar:not(headerbar) {
+  min-height: 32px;
+  padding: 0;
+  margin: 0;
+  border-bottom-width: 0;
+}
+
+headerbar.default-decoration .title,
+.default-decoration.titlebar:not(headerbar) .title {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Base button sizing & zero-transition rule */
+headerbar button.titlebutton,
+.titlebar button.titlebutton,
+headerbar button.titlebutton.close,
+headerbar button.titlebutton.maximize,
+headerbar button.titlebutton.minimize,
+.titlebar button.titlebutton.close,
+.titlebar button.titlebutton.maximize,
+.titlebar button.titlebutton.minimize {
+  min-width: 46px;
+  min-height: 46px;
+  padding: 0;
+  margin: 0;
+  margin-left: -6px;
+  border: 0;
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  transition: none;
+  -gtk-icon-shadow: none;
+  text-shadow: none;
+  color: transparent;
+  background-color: transparent;
+  background-image: none;
+  background-size: 10px 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* SSD (Muffin default-decoration): 32px tall titlebar, keep 46x32 buttons */
+headerbar.default-decoration button.titlebutton,
+.titlebar.default-decoration button.titlebutton,
+headerbar.default-decoration button.titlebutton.close,
+headerbar.default-decoration button.titlebutton.maximize,
+headerbar.default-decoration button.titlebutton.minimize,
+.titlebar.default-decoration button.titlebutton.close,
+.titlebar.default-decoration button.titlebutton.maximize,
+.titlebar.default-decoration button.titlebutton.minimize {
+  min-width: 46px;
+  min-height: 32px;
+  margin: 0;
+}
+
+/* Hide GTK3 CSD inner GtkImage cleanly without changing layout */
+headerbar button.titlebutton > image,
+.titlebar button.titlebutton > image {
+  opacity: 0;
+  color: transparent;
+  -gtk-icon-shadow: none;
+}
+
+headerbar button.titlebutton:hover,
+.titlebar button.titlebutton:hover,
+headerbar.default-decoration button.titlebutton:hover,
+.titlebar.default-decoration button.titlebutton:hover {
+  color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+headerbar button.titlebutton:active,
+headerbar button.titlebutton:checked,
+.titlebar button.titlebutton:active,
+.titlebar button.titlebutton:checked,
+headerbar.default-decoration button.titlebutton:active,
+headerbar.default-decoration button.titlebutton:checked,
+.titlebar.default-decoration button.titlebutton:active,
+.titlebar.default-decoration button.titlebutton:checked {
+  color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Minimize */
+headerbar button.titlebutton.minimize,
+.titlebar button.titlebutton.minimize,
+headerbar.default-decoration button.titlebutton.minimize,
+.titlebar.default-decoration button.titlebutton.minimize {
+  color: transparent;
+  background-color: transparent;
+  background-image: url("assets/win11-min.svg");
+}
+
+headerbar button.titlebutton.minimize:backdrop,
+.titlebar button.titlebutton.minimize:backdrop,
+headerbar.default-decoration button.titlebutton.minimize:backdrop,
+.titlebar.default-decoration button.titlebutton.minimize:backdrop {
+  color: transparent;
+  background-color: transparent;
+  background-image: url("assets/win11-min-backdrop.svg");
+}
+
+headerbar button.titlebutton.minimize:hover,
+headerbar button.titlebutton.minimize:hover:backdrop,
+.titlebar button.titlebutton.minimize:hover,
+.titlebar button.titlebutton.minimize:hover:backdrop,
+headerbar.default-decoration button.titlebutton.minimize:hover,
+headerbar.default-decoration button.titlebutton.minimize:hover:backdrop,
+.titlebar.default-decoration button.titlebutton.minimize:hover,
+.titlebar.default-decoration button.titlebutton.minimize:hover:backdrop {
+  color: transparent;
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: url("assets/win11-min.svg");
+}
+
+headerbar button.titlebutton.minimize:active,
+headerbar button.titlebutton.minimize:active:backdrop,
+.titlebar button.titlebutton.minimize:active,
+.titlebar button.titlebutton.minimize:active:backdrop,
+headerbar.default-decoration button.titlebutton.minimize:active,
+headerbar.default-decoration button.titlebutton.minimize:active:backdrop,
+.titlebar.default-decoration button.titlebutton.minimize:active,
+.titlebar.default-decoration button.titlebutton.minimize:active:backdrop {
+  color: transparent;
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: url("assets/win11-min.svg");
+}
+
+/* Maximize / Restore */
+headerbar button.titlebutton.maximize,
+.titlebar button.titlebutton.maximize,
+headerbar.default-decoration button.titlebutton.maximize,
+.titlebar.default-decoration button.titlebutton.maximize {
+  color: transparent;
+  background-color: transparent;
+  background-image: url("assets/win11-max.svg");
+}
+
+headerbar button.titlebutton.maximize:backdrop,
+.titlebar button.titlebutton.maximize:backdrop,
+headerbar.default-decoration button.titlebutton.maximize:backdrop,
+.titlebar.default-decoration button.titlebutton.maximize:backdrop {
+  color: transparent;
+  background-color: transparent;
+  background-image: url("assets/win11-max-backdrop.svg");
+}
+
+headerbar button.titlebutton.maximize:hover,
+headerbar button.titlebutton.maximize:hover:backdrop,
+.titlebar button.titlebutton.maximize:hover,
+.titlebar button.titlebutton.maximize:hover:backdrop,
+headerbar.default-decoration button.titlebutton.maximize:hover,
+headerbar.default-decoration button.titlebutton.maximize:hover:backdrop,
+.titlebar.default-decoration button.titlebutton.maximize:hover,
+.titlebar.default-decoration button.titlebutton.maximize:hover:backdrop {
+  color: transparent;
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: url("assets/win11-max.svg");
+}
+
+headerbar button.titlebutton.maximize:active,
+headerbar button.titlebutton.maximize:active:backdrop,
+.titlebar button.titlebutton.maximize:active,
+.titlebar button.titlebutton.maximize:active:backdrop,
+headerbar.default-decoration button.titlebutton.maximize:active,
+headerbar.default-decoration button.titlebutton.maximize:active:backdrop,
+.titlebar.default-decoration button.titlebutton.maximize:active,
+.titlebar.default-decoration button.titlebutton.maximize:active:backdrop {
+  color: transparent;
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: url("assets/win11-max.svg");
+}
+
+.maximized headerbar button.titlebutton.maximize,
+.maximized .titlebar button.titlebutton.maximize,
+.maximized headerbar.default-decoration button.titlebutton.maximize,
+.maximized .titlebar.default-decoration button.titlebutton.maximize {
+  background-image: url("assets/win11-restore.svg");
+}
+
+.maximized headerbar button.titlebutton.maximize:backdrop,
+.maximized .titlebar button.titlebutton.maximize:backdrop,
+.maximized headerbar.default-decoration button.titlebutton.maximize:backdrop,
+.maximized .titlebar.default-decoration button.titlebutton.maximize:backdrop {
+  background-image: url("assets/win11-restore-backdrop.svg");
+}
+
+.maximized headerbar button.titlebutton.maximize:hover,
+.maximized headerbar button.titlebutton.maximize:hover:backdrop,
+.maximized .titlebar button.titlebutton.maximize:hover,
+.maximized .titlebar button.titlebutton.maximize:hover:backdrop,
+.maximized headerbar.default-decoration button.titlebutton.maximize:hover,
+.maximized headerbar.default-decoration button.titlebutton.maximize:hover:backdrop,
+.maximized .titlebar.default-decoration button.titlebutton.maximize:hover,
+.maximized .titlebar.default-decoration button.titlebutton.maximize:hover:backdrop {
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: url("assets/win11-restore.svg");
+}
+
+/* Close (Windows 11 #C42B1C hover, #B22719 active) */
+headerbar button.titlebutton.close,
+.titlebar button.titlebutton.close,
+headerbar.default-decoration button.titlebutton.close,
+.titlebar.default-decoration button.titlebutton.close {
+  color: transparent;
+  background-color: transparent;
+  background-image: url("assets/win11-close.svg");
+  border-top-right-radius: 8px;
+}
+
+headerbar button.titlebutton.close:backdrop,
+.titlebar button.titlebutton.close:backdrop,
+headerbar.default-decoration button.titlebutton.close:backdrop,
+.titlebar.default-decoration button.titlebutton.close:backdrop {
+  color: transparent;
+  background-color: transparent;
+  background-image: url("assets/win11-close-backdrop.svg");
+}
+
+headerbar button.titlebutton.close:hover,
+headerbar button.titlebutton.close:hover:backdrop,
+.titlebar button.titlebutton.close:hover,
+.titlebar button.titlebutton.close:hover:backdrop,
+headerbar.default-decoration button.titlebutton.close:hover,
+headerbar.default-decoration button.titlebutton.close:hover:backdrop,
+.titlebar.default-decoration button.titlebutton.close:hover,
+.titlebar.default-decoration button.titlebutton.close:hover:backdrop {
+  color: transparent;
+  background-color: #C42B1C;
+  background-image: url("assets/win11-close.svg");
+}
+
+headerbar button.titlebutton.close:active,
+headerbar button.titlebutton.close:active:backdrop,
+.titlebar button.titlebutton.close:active,
+.titlebar button.titlebutton.close:active:backdrop,
+headerbar.default-decoration button.titlebutton.close:active,
+headerbar.default-decoration button.titlebutton.close:active:backdrop,
+.titlebar.default-decoration button.titlebutton.close:active,
+.titlebar.default-decoration button.titlebutton.close:active:backdrop {
+  color: transparent;
+  background-color: #B22719;
+  background-image: url("assets/win11-close.svg");
+}
+
+.maximized headerbar button.titlebutton.close,
+.maximized .titlebar button.titlebutton.close,
+.maximized headerbar.default-decoration button.titlebutton.close,
+.maximized .titlebar.default-decoration button.titlebutton.close,
+.tiled headerbar button.titlebutton.close,
+.tiled .titlebar button.titlebutton.close,
+.tiled-top headerbar button.titlebutton.close,
+.tiled-top .titlebar button.titlebutton.close,
+.tiled-right headerbar button.titlebutton.close,
+.tiled-right .titlebar button.titlebutton.close,
+.fullscreen headerbar button.titlebutton.close,
+.fullscreen .titlebar button.titlebutton.close {
+  border-top-right-radius: 0;
+}

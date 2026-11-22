@@ -1,0 +1,127 @@
+@import url("file:///usr/share/themes/Mint-Y-Dark-Aqua/gtk-4.0/gtk.css");
+
+/* ============================================================================
+ * Windows 11 Window Control Buttons for GTK4 (Zero-cost CSS + SVG)
+ * ============================================================================ */
+
+headerbar {
+  padding-right: 0;
+}
+
+headerbar:dir(rtl) {
+  padding-left: 0;
+  padding-right: 6px;
+}
+
+windowcontrols {
+  border-spacing: 0;
+  margin: 0;
+  padding: 0;
+}
+
+windowcontrols > button {
+  min-width: 46px;
+  min-height: 32px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  transition: none;
+  color: transparent;
+  background-color: transparent;
+  background-image: none;
+  background-size: 10px 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+windowcontrols > button > image {
+  opacity: 0;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+windowcontrols > button.minimize {
+  background-image: url("assets/win11-min.svg");
+}
+
+windowcontrols > button.minimize:backdrop {
+  background-image: url("assets/win11-min-backdrop.svg");
+}
+
+windowcontrols > button.minimize:hover,
+windowcontrols > button.minimize:hover:backdrop {
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: url("assets/win11-min.svg");
+}
+
+windowcontrols > button.minimize:active,
+windowcontrols > button.minimize:active:backdrop {
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: url("assets/win11-min.svg");
+}
+
+windowcontrols > button.maximize {
+  background-image: url("assets/win11-max.svg");
+}
+
+windowcontrols > button.maximize:backdrop {
+  background-image: url("assets/win11-max-backdrop.svg");
+}
+
+windowcontrols > button.maximize:hover,
+windowcontrols > button.maximize:hover:backdrop {
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: url("assets/win11-max.svg");
+}
+
+windowcontrols > button.maximize:active,
+windowcontrols > button.maximize:active:backdrop {
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: url("assets/win11-max.svg");
+}
+
+.maximized windowcontrols > button.maximize {
+  background-image: url("assets/win11-restore.svg");
+}
+
+.maximized windowcontrols > button.maximize:backdrop {
+  background-image: url("assets/win11-restore-backdrop.svg");
+}
+
+.maximized windowcontrols > button.maximize:hover,
+.maximized windowcontrols > button.maximize:hover:backdrop {
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: url("assets/win11-restore.svg");
+}
+
+windowcontrols > button.close {
+  background-image: url("assets/win11-close.svg");
+  border-top-right-radius: 8px;
+}
+
+windowcontrols > button.close:backdrop {
+  background-image: url("assets/win11-close-backdrop.svg");
+}
+
+windowcontrols > button.close:hover,
+windowcontrols > button.close:hover:backdrop {
+  background-color: #C42B1C;
+  background-image: url("assets/win11-close.svg");
+}
+
+windowcontrols > button.close:active,
+windowcontrols > button.close:active:backdrop {
+  background-color: #B22719;
+  background-image: url("assets/win11-close.svg");
+}
+
+.maximized windowcontrols > button.close,
+.tiled windowcontrols > button.close,
+.fullscreen windowcontrols > button.close {
+  border-top-right-radius: 0;
+}

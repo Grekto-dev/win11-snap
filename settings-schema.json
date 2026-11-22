@@ -1,0 +1,76 @@
+{
+    "layout": {
+        "type": "layout",
+        "pages": ["settings-page"],
+        "settings-page": {
+            "type": "custom",
+            "title": "Win11 Snap",
+            "file": "settings_page.py",
+            "widget": "Win11SnapSettingsPage"
+        }
+    },
+    "language": {
+        "type": "generic",
+        "default": "en"
+    },
+    "drag_snap": {
+        "type": "generic",
+        "default": true
+    },
+    "top_snap_bar": {
+        "type": "generic",
+        "default": true
+    },
+    "enable_snap_assist": {
+        "type": "generic",
+        "default": true
+    },
+    "enable_animations": {
+        "type": "generic",
+        "default": true
+    },
+    "csd_decor": {
+        "type": "generic",
+        "default": true
+    },
+    "enable_shortcuts": {
+        "type": "generic",
+        "default": true
+    },
+    "hover_delay_ms": {
+        "type": "generic",
+        "default": 450
+    },
+    "gap_px": {
+        "type": "generic",
+        "default": 0
+    },
+    "snap_layouts": {
+        "type": "generic",
+        "default": "<Super>z"
+    },
+    "snap_left": {
+        "type": "generic",
+        "default": "<Super>Left"
+    },
+    "snap_right": {
+        "type": "generic",
+        "default": "<Super>Right"
+    },
+    "snap_up": {
+        "type": "generic",
+        "default": "<Super>Up"
+    },
+    "snap_down": {
+        "type": "generic",
+        "default": "<Super>Down"
+    },
+    "snap_top_half": {
+        "type": "generic",
+        "default": "<Super><Alt>Up"
+    },
+    "snap_bottom_half": {
+        "type": "generic",
+        "default": "<Super><Alt>Down"
+    }
+}

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Mint-Y-Dark-Aqua-Win11
+Comment=Mint-Y-Dark-Aqua with Windows 11 46x32 titlebar window buttons
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Mint-Y-Dark-Aqua-Win11
+MetacityTheme=Mint-Y
+IconTheme=Mint-Y-Aqua
+CursorTheme=Bibata-Modern-Classic
+ButtonLayout=:minimize,maximize,close

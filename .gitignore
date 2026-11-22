@@ -1,0 +1,6 @@
+win11-snapd
+src/*.o
+__pycache__/
+ui/__pycache__/
+*.pyc
+docs/screenshots/
