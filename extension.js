@@ -181,6 +181,13 @@ class Win11SnapExtension {
         for (let k of keys) {
             this._settings.bind(k, k, () => this._scheduleSync());
         }
+        this._ifaceSettings = new Gio.Settings({ schema_id: 'org.cinnamon.desktop.interface' });
+        this._wmPrefSettings = new Gio.Settings({ schema_id: 'org.cinnamon.desktop.wm.preferences' });
+        this._ifaceChangedIds = [
+            this._ifaceSettings.connect('changed::gtk-theme', () => this._scheduleSync()),
+            this._ifaceSettings.connect('changed::scaling-factor', () => this._scheduleSync()),
+        ];
+        this._wmChangedId = this._wmPrefSettings.connect('changed::button-layout', () => this._scheduleSync());
     }
 
     _scheduleSync() {
@@ -198,6 +205,16 @@ class Win11SnapExtension {
             }
             return GLib.SOURCE_REMOVE;
         });
+    }
+
+    _hasKey(kf, group, key) {
+        try {
+            if (!kf.has_group(group)) return false;
+            kf.get_value(group, key);
+            return true;
+        } catch (_) {
+            return false;
+        }
     }
 
     _readBackup() {
@@ -237,16 +254,20 @@ class Win11SnapExtension {
             let kf = this._readBackup();
             let changed = false;
 
-            if (!kf.has_group('backup') || !kf.has_key('backup', 'gtk_theme')) {
-                kf.set_string('backup', 'gtk_theme', iface.get_string('gtk-theme'));
+            if (!this._hasKey(kf, 'backup', 'gtk_theme')) {
+                let curTheme = iface.get_string('gtk-theme');
+                if (curTheme === 'Mint-Y-Dark-Aqua-Win11') {
+                    curTheme = 'Mint-Y-Dark-Aqua';
+                }
+                kf.set_string('backup', 'gtk_theme', curTheme);
                 changed = true;
             }
-            if (!kf.has_key('backup', 'edge_tiling')) {
+            if (!this._hasKey(kf, 'backup', 'edge_tiling')) {
                 kf.set_string('backup', 'edge_tiling', muffin.get_boolean('edge-tiling') ? 'true' : 'false');
                 changed = true;
             }
             for (let k of TILE_KEYS) {
-                if (!kf.has_key('backup', k)) {
+                if (!this._hasKey(kf, 'backup', k)) {
                     kf.set_string('backup', k, wm.get_strv(k).join(','));
                     changed = true;
                 }
@@ -268,16 +289,17 @@ class Win11SnapExtension {
 
     _syncCinnamonHandoff(restoring) {
         try {
+            let iface = new Gio.Settings({ schema_id: 'org.cinnamon.desktop.interface' });
             let muffin = new Gio.Settings({ schema_id: 'org.cinnamon.muffin' });
             let wm = new Gio.Settings({ schema_id: 'org.cinnamon.desktop.keybindings.wm' });
             let kf = this._readBackup();
 
-            let origEdge = kf.has_key('backup', 'edge_tiling')
+            let origEdge = this._hasKey(kf, 'backup', 'edge_tiling')
                 ? (kf.get_string('backup', 'edge_tiling').toLowerCase() === 'true')
                 : true;
 
             const restoreKeyFromBackup = (k) => {
-                if (!kf.has_key('backup', k)) return;
+                if (!this._hasKey(kf, 'backup', k)) return;
                 let raw = kf.get_string('backup', k);
                 let vals = raw.split(',').map(s => s.trim()).filter(s => s.length > 0);
                 if (wm.get_strv(k).length === 0 && vals.length > 0) {
@@ -289,6 +311,12 @@ class Win11SnapExtension {
                 muffin.set_boolean('edge-tiling', origEdge);
                 for (let k of TILE_KEYS) {
                     restoreKeyFromBackup(k);
+                }
+                if (this._hasKey(kf, 'backup', 'gtk_theme')) {
+                    let origTheme = kf.get_string('backup', 'gtk_theme').trim();
+                    if (origTheme && iface.get_string('gtk-theme') === 'Mint-Y-Dark-Aqua-Win11') {
+                        iface.set_string('gtk-theme', origTheme);
+                    }
                 }
                 Gio.Settings.sync();
                 return;
@@ -450,6 +478,16 @@ class Win11SnapExtension {
         if (this._syncTimerId > 0) {
             Mainloop.source_remove(this._syncTimerId);
             this._syncTimerId = 0;
+        }
+        if (this._ifaceSettings && this._ifaceChangedIds) {
+            for (let id of this._ifaceChangedIds) {
+                try { this._ifaceSettings.disconnect(id); } catch (_) {}
+            }
+            this._ifaceChangedIds = [];
+        }
+        if (this._wmPrefSettings && this._wmChangedId) {
+            try { this._wmPrefSettings.disconnect(this._wmChangedId); } catch (_) {}
+            this._wmChangedId = 0;
         }
         this._stopExistingDaemon();
         this._syncCinnamonHandoff(true);

@@ -297,8 +297,16 @@ void config_load(AppConfig *cfg, const char *explicit_config_path) {
         }
     }
 
+    bool loaded_geom = false;
     if (geom_path[0]) {
-        parse_ini_file(cfg, geom_path);
+        loaded_geom = parse_ini_file(cfg, geom_path);
+    }
+    if (!loaded_geom && strncmp(cfg->theme_name, "Mint-Y", 6) == 0 &&
+        strstr(cfg->theme_name, "Win11") == NULL) {
+        /* Standard Linux Mint Mint-Y GTK3 default-decoration (22x28 button, 6px gap/padding) */
+        cfg->ssd = (ButtonGeometry){24, 30, 4, 6, 1};
+        cfg->csd_gtk3 = (ButtonGeometry){24, 42, 6, 6, 0};
+        cfg->csd_gtk4 = (ButtonGeometry){24, 32, 6, 6, 0};
     }
 
     if (user_cfg[0]) {

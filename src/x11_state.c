@@ -132,6 +132,24 @@ int x11_get_dpi_scale(Display *dpy, Window root, const X11Atoms *atoms) {
         XFree(data);
     }
     int scale = (int)lround(dpi / 96.0);
+    if (scale <= 1) {
+        const char *gdk_s = getenv("GDK_SCALE");
+        if (gdk_s && atoi(gdk_s) >= 2) {
+            scale = atoi(gdk_s);
+        } else {
+            FILE *fp = popen("gsettings get org.cinnamon.desktop.interface scaling-factor 2>/dev/null", "r");
+            if (fp) {
+                char buf[64] = "";
+                if (fgets(buf, sizeof(buf), fp)) {
+                    const char *p = buf;
+                    while (*p && !isdigit((unsigned char)*p)) p++;
+                    int gs = atoi(p);
+                    if (gs >= 2 && gs <= 4) scale = gs;
+                }
+                pclose(fp);
+            }
+        }
+    }
     return scale < 1 ? 1 : scale;
 }
 

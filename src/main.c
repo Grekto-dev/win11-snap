@@ -1050,6 +1050,14 @@ static void handle_x11_event(DaemonCtx *ctx, XEvent *ev, uint64_t now) {
         return;
     }
 
+    if (ev->xany.window == ctx->root && ev->type == ConfigureNotify) {
+        x11_refresh_workareas(ctx->dpy, ctx->root, &ctx->atoms, ctx->workareas, &ctx->num_workareas);
+        transition_idle(ctx, "root-resolution-changed");
+        refresh_active(ctx);
+        csd_decor_sync_all(&ctx->csd_decor, &ctx->atoms, &ctx->cfg, ctx->active.win, true, ctx->debug);
+        return;
+    }
+
     if (ev->xany.window == ctx->root && ev->type == PropertyNotify) {
         Atom prop = ev->xproperty.atom;
         if (prop == ctx->atoms.net_active_window) {
@@ -1068,11 +1076,25 @@ static void handle_x11_event(DaemonCtx *ctx, XEvent *ev, uint64_t now) {
         } else if (prop == ctx->atoms.net_current_desktop || prop == ctx->atoms.net_workarea) {
             x11_refresh_workareas(ctx->dpy, ctx->root, &ctx->atoms, ctx->workareas, &ctx->num_workareas);
             transition_idle(ctx, "desktop-or-workarea-changed");
+            refresh_active(ctx);
+            csd_decor_sync_all(&ctx->csd_decor, &ctx->atoms, &ctx->cfg, ctx->active.win, true, ctx->debug);
+        } else if (prop == ctx->atoms.resource_manager) {
+            int new_scale = x11_get_dpi_scale(ctx->dpy, ctx->root, &ctx->atoms);
+            if (new_scale != ctx->cfg.dpi_scale) {
+                ctx->cfg.dpi_scale = new_scale;
+                popup_destroy(&ctx->popup);
+                popup_init(&ctx->popup, ctx->dpy, ctx->root, &ctx->atoms, &ctx->cfg, ctx->layouts);
+            }
+            x11_refresh_workareas(ctx->dpy, ctx->root, &ctx->atoms, ctx->workareas, &ctx->num_workareas);
+            refresh_active(ctx);
+            csd_decor_sync_all(&ctx->csd_decor, &ctx->atoms, &ctx->cfg, ctx->active.win, true, ctx->debug);
         } else {
             char *aname = XGetAtomName(ctx->dpy, prop);
             if (aname) {
                 if (strncmp(aname, "_GTK_WORKAREAS", 14) == 0) {
                     x11_refresh_workareas(ctx->dpy, ctx->root, &ctx->atoms, ctx->workareas, &ctx->num_workareas);
+                    refresh_active(ctx);
+                    csd_decor_sync_all(&ctx->csd_decor, &ctx->atoms, &ctx->cfg, ctx->active.win, true, ctx->debug);
                 }
                 XFree(aname);
             }
@@ -1099,7 +1121,9 @@ static void handle_x11_event(DaemonCtx *ctx, XEvent *ev, uint64_t now) {
                                   abs(updated.frame_rect.y - ctx->drag_start_rect.y) >= 6);
                     bool same_sz = (abs(updated.frame_rect.w - ctx->drag_start_rect.w) <= 8 &&
                                     abs(updated.frame_rect.h - ctx->drag_start_rect.h) <= 8);
-                    if (!ctx->is_dragging_window && moved && (same_sz || ctx->drag_start_rect.w >= 1400)) {
+                    WorkArea swa = snap_pick_workarea(ctx->workareas, ctx->num_workareas, ctx->drag_start_rect);
+                    bool was_maximized_width = (swa.w > 0 && ctx->drag_start_rect.w >= swa.w - 32);
+                    if (!ctx->is_dragging_window && moved && (same_sz || was_maximized_width)) {
                         ctx->is_dragging_window = true;
                         ctx->drag_win = updated.win;
                         drag_started_now = true;
@@ -1481,7 +1505,7 @@ int main(int argc, char **argv) {
         ctx.num_keycodes[i] = XKeysymToKeycode(ctx.dpy, XK_1 + i);
     }
     grab_all_shortcuts(&ctx);
-    XSelectInput(ctx.dpy, ctx.root, PropertyChangeMask);
+    XSelectInput(ctx.dpy, ctx.root, PropertyChangeMask | StructureNotifyMask);
     csd_decor_init(&ctx.csd_decor, ctx.dpy, ctx.root);
     refresh_active(&ctx);
     csd_decor_sync_all(&ctx.csd_decor, &ctx.atoms, &ctx.cfg, ctx.active.win, false, ctx.debug);
